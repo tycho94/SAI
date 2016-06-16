@@ -18,8 +18,9 @@ import javax.swing.JCheckBox;
  */
 public class BookingClientFrame extends javax.swing.JFrame {
 
+    private final String Channel = "1";
     private final DefaultListModel<ClientListLine> listModel;
-
+    private ClientMiddleGateway gateway;
 
     /**
      * Creates new form NewJFrame
@@ -28,6 +29,14 @@ public class BookingClientFrame extends javax.swing.JFrame {
         this.listModel = new DefaultListModel<>();
         initComponents();
         setTransfer(this.jcbTransfer.isSelected());
+        
+        gateway = new ClientMiddleGateway(Channel) {
+            @Override
+            public void onBookingReplyArrived(ClientBookingRequest request, ClientBookingReply reply) {
+                getRequestReply(request).setReply(reply);
+                jList1.repaint();
+            }
+        };
     }
 
     private ClientListLine getRequestReply(ClientBookingRequest request) {
@@ -38,7 +47,6 @@ public class BookingClientFrame extends javax.swing.JFrame {
                 return rr;
             }
         }
-
         return null;
     }
 
@@ -233,6 +241,8 @@ public class BookingClientFrame extends javax.swing.JFrame {
 
         ClientBookingRequest request = new ClientBookingRequest(fromAirport, toAirport, nrTravellers, transferAddress);
 
+        gateway.sendBookingRequest(request);
+        
         listModel.addElement(new ClientListLine(request, null));
     }//GEN-LAST:event_jbSendActionPerformed
 

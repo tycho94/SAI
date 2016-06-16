@@ -39,7 +39,7 @@ public abstract class ClientMiddleGateway {
                 ClientBookingReply reply = null;
                 try {
                     reply = serializer.replyFromSTring(((TextMessage) msg).getText());
-                    
+                    onBookingReplyArrived(hm.get(msg.getJMSCorrelationID()), reply);
                 } catch (JMSException ex) {
                     Logger.getLogger(ClientMiddleGateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -53,11 +53,12 @@ public abstract class ClientMiddleGateway {
         try {
             sender = new MessageSender(Constants.clientMiddleDest);
             Message msg = sender.createTextMessage(serializer.requestToString(request));
+            sender.send(msg);
             msg.setJMSReplyTo(receiver.getDestination());
             hm.put(msg.getJMSMessageID(), request);
         } catch (NamingException | JMSException ex) {
             Logger.getLogger(ClientMiddleGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-        public abstract void onLoanReplyArrived(ClientBookingRequest request, ClientBookingReply reply);
+        public abstract void onBookingReplyArrived(ClientBookingRequest request, ClientBookingReply reply);
 }
