@@ -266,4 +266,5 @@ public class BookingClientFrame extends javax.swing.JFrame {
     private javax.swing.JTextField tfTransferHouseNumber;
     private javax.swing.JTextField tfTransferStreet;
     // End of variables declaration//GEN-END:variables
+    private static final long serialVersionUID = 7526472295622776147L;
 }
