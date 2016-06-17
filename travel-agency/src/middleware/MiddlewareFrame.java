@@ -8,6 +8,7 @@ package middleware;
 import agency.AgencyMiddleGateway;
 import booking.model.agency.AgencyReply;
 import booking.model.agency.AgencyRequest;
+import booking.model.client.ClientBookingReply;
 import booking.model.client.ClientBookingRequest;
 import gateway.Constants;
 import java.util.HashMap;
@@ -50,17 +51,17 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                     gatewayAgency.sendAgencyRequest(1, newRequest);
                     counter++;
                 }
-                if(Rule(Constants.good2, newRequest)){
+                if (Rule(Constants.good2, newRequest)) {
                     gatewayAgency.sendAgencyRequest(2, newRequest);
                     counter++;
                 }
-                if(Rule(Constants.fast3, newRequest)){
+                if (Rule(Constants.fast3, newRequest)) {
                     gatewayAgency.sendAgencyRequest(3, newRequest);
                     counter++;
                 }
-                listModel.addElement(new BookingAgencyListLine(newRequest, null));
+                add(newRequest);
                 hmRequests.put(newRequest, request);
-                if(counter > 0){
+                if (counter > 0) {
                     hmAggregator.put(newRequest, counter);
                 }
             }
@@ -69,7 +70,26 @@ public class MiddlewareFrame extends javax.swing.JFrame {
         gatewayAgency = new MiddleAgencyGateway() {
             @Override
             public void onAgencyReplyArrived(AgencyRequest request, AgencyReply reply) {
-                
+                if (hmAggregator.get(request) > 0) {
+                    hmAggregator.put(request, (hmAggregator.get(request) - 1));
+
+                    if (getCurrentReply(request) != null) {
+                        if (getCurrentReply(request).getTotalPrice() == -1 && reply.getTotalPrice() > 0) {
+                            add(request, reply);
+                        }
+                        if (getCurrentReply(request).getTotalPrice() > reply.getTotalPrice() && reply.getTotalPrice() > 0) {
+                            add(request, reply);
+                        }
+                    } else {
+                        add(request, reply);
+                    }
+                }
+
+                if (hmAggregator.get(request) == 0) {
+                    ClientBookingReply newReply = new ClientBookingReply(getCurrentReply(request).getNameAgency(), getCurrentReply(request).getTotalPrice());
+
+                    gatewayClient.sendBookingReply(hmRequests.get(request), newReply);
+                }
             }
         };
 
@@ -78,8 +98,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
     /**
      * @param rule Rule to check
      * @param request The request in question
-     * @return 
-     * if the request is OK according to the rule true else false
+     * @return if the request is OK according to the rule true else false
      */
     public boolean Rule(String rule, AgencyRequest request) {
         String resultString;
@@ -95,6 +114,31 @@ public class MiddlewareFrame extends javax.swing.JFrame {
             Logger.getLogger(MiddlewareFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
+    }
+
+    private AgencyReply getCurrentReply(AgencyRequest request) {
+        for (int i = 0; i < listModel.size(); i++) {
+            BookingAgencyListLine rr = listModel.get(i);
+            if (rr.getRequest() == request) {
+                return rr.getReply();
+            }
+        }
+        return null;
+    }
+
+    public void add(AgencyRequest request) {
+        listModel.addElement(new BookingAgencyListLine(request, null));
+        jList1.repaint();
+    }
+
+    public void add(AgencyRequest request, AgencyReply reply) {
+        for (int i = 0; i < listModel.size(); i++) {
+            BookingAgencyListLine rr = listModel.get(i);
+            if (rr.getRequest() == request) {
+                rr.setReply(reply);
+                jList1.repaint();
+            }
+        }
     }
 
     /**
