@@ -20,8 +20,8 @@ public class StartAllAgencies {
 
         EventQueue.invokeLater(() -> {
             try {
-                BookingAgencyFrame frame = new BookingAgencyFrame("Book Fast",
-                        "bookFastQueue");
+                BookingAgencyFrame frame = new BookingAgencyFrame("Book Cheap",
+                        "Cheap");
                 frame.setLocation(1500, 70);
                 frame.setVisible(true);
             } catch (Exception e) {
@@ -31,8 +31,8 @@ public class StartAllAgencies {
 
         EventQueue.invokeLater(() -> {
             try {
-                BookingAgencyFrame frame = new BookingAgencyFrame("Book Cheap",
-                        "bookCheapQueue");
+                BookingAgencyFrame frame = new BookingAgencyFrame("Book Good",
+                        "Good");
                 frame.setLocation(1500, 370);
                 frame.setVisible(true);
             } catch (Exception e) {
@@ -42,8 +42,8 @@ public class StartAllAgencies {
 
         EventQueue.invokeLater(() -> {
             try {
-                BookingAgencyFrame frame = new BookingAgencyFrame("Book Good Service",
-                        "bookGoodServiceQueue");
+                BookingAgencyFrame frame = new BookingAgencyFrame("Book Fast",
+                        "Fast");
                 frame.setLocation(1500, 670);
                 frame.setVisible(true);
             } catch (Exception e) {
