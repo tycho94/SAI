@@ -25,6 +25,7 @@
 # Word temporary
 ~$*.doc*
 *.doc*
+
 # Excel temporary
 ~$*.xls*
 
@@ -33,6 +34,7 @@
 
 # PowerPoint temporary
 ~$*.ppt*
+*.ppt*
 
 # Visio autosave temporary files
 *.~vsdx

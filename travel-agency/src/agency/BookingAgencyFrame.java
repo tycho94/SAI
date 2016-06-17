@@ -22,9 +22,8 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TravelApprovalFrame
-     *
-     * @param agencyName
      */
+     
     public BookingAgencyFrame(String agencyName, String bankRequestQueue) {
         this.listModel = new DefaultListModel<>();
         initComponents();
