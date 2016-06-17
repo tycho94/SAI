@@ -25,7 +25,7 @@ public class Constants {
     
     
     //rules
-    public static final String ABN = "#{amount} <= 100000 && #{time} <= 10";
-    public static final String ING = "#{amount} >= 200000 && #{amount} <= 300000  && #{time} <= 20";
-    public static final String RABO = "#{amount} <= 250000 && #{time} <= 15";
+    public static final String cheap1 = "#{transfer} >= 10 && #{transfer} <= 50";
+    public static final String good2 = "#{transfer} >= -1 && #{transfer} <= 40";
+    public static final String fast3 = "#{transfer} <= -1";
 }
