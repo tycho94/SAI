@@ -25,6 +25,7 @@ public class MessageSender {
     Destination destination;
     MessageProducer producer;
 
+    //Constructor to create a Message sender using channelName for the channel
     public MessageSender(String channelName) throws NamingException, JMSException {
 
         Properties props = new Properties();
@@ -45,6 +46,7 @@ public class MessageSender {
         connection.start();
     }
 
+    //This constructor is used to set the producer destination to null (middle to client)
     public MessageSender() throws NamingException, JMSException {
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY,
@@ -62,6 +64,7 @@ public class MessageSender {
         connection.start();
     }
 
+    //Create text Message
     public Message createTextMessage(String str) {
         Message m = null;
         try {
@@ -72,12 +75,14 @@ public class MessageSender {
        
         return m;
     }
-
+    
+    //Send message to set destination
     public Message send(Message msg) throws JMSException {
         producer.send(msg);
         return msg;
     }
 
+    //Extra send method for Return Address pattern
     public void send(Message msg, Destination dest) throws JMSException {
         producer.send(dest, msg);
     }

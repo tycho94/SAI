@@ -25,6 +25,7 @@ public final class MessageReceiver {
     Destination destination;
     MessageConsumer consumer;
 
+    //Constructor to create a Receiver
     public MessageReceiver(String channelName) throws NamingException, JMSException {
         Properties props = new Properties();
         props.setProperty(Context.INITIAL_CONTEXT_FACTORY,
@@ -40,26 +41,28 @@ public final class MessageReceiver {
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         destination = (Destination) jndiContext.lookup(channelName);
         consumer = session.createConsumer(destination);
+        // Turn off redelivery by standard
         StopRedelivery();
         connection.start();
     }
-
+    
+    //Set message Listener
     public void setListener(MessageListener ml) throws JMSException {
         consumer.setMessageListener(ml);
-
     }
-
+    //Get destination to set ReplyTo
     public Destination getDestination() {
         return destination;
     }
 
+    //This is called after the constructor to turn on redelivery for specific receivers
     public void SetRedelivery() throws JMSException {
         RedeliveryPolicy policy = ((ActiveMQConnection) connection).getRedeliveryPolicy();
         policy.setInitialRedeliveryDelay(10000);
         policy.setRedeliveryDelay(3000);
         policy.setMaximumRedeliveries(3);
     }    
-    
+    //This is Called in the constructor.
     public void StopRedelivery() throws JMSException {
         RedeliveryPolicy policy = ((ActiveMQConnection) connection).getRedeliveryPolicy();
         policy.setMaximumRedeliveries(0);   

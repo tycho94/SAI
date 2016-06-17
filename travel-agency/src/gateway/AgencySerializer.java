@@ -13,6 +13,7 @@ import com.owlike.genson.Genson;
  *
  * @author tycho
  */
+//Simple Serializer for AgencyRequest and Reply
 public class AgencySerializer {
 
     private Genson genson;

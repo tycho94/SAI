@@ -13,6 +13,7 @@ import com.owlike.genson.Genson;
  *
  * @author tycho
  */
+//Simple Serializer for BookingRequest and Reply
 public class BookingSerializer {
 
     private Genson genson;
