@@ -34,7 +34,7 @@ public abstract class AgencyMiddleGateway {
         try {
             hm = new HashMap<>();
             serializer = new AgencySerializer();
-            receiver = new MessageReceiver(Channel);
+            receiver = new MessageReceiver(Constants.middleAgencyDest + Channel);
             receiver.setListener((Message msg) -> {
                 AgencyRequest request = null;
                 try {

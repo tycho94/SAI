@@ -45,7 +45,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
             public void onBookingRequestArrived(ClientBookingRequest request) {
                 AgencyRequest newRequest
                         = new AgencyRequest(request.getDestinationAirport(),
-                                request.getOriginAirport(), 0);
+                                request.getOriginAirport(), -1);
                 int counter = 0;
                 if (Rule(Constants.cheap1, newRequest)) {
                     gatewayAgency.sendAgencyRequest(1, newRequest);

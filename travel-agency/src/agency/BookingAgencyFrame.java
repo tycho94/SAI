@@ -19,6 +19,7 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
 
     private final DefaultListModel<BookingAgencyListLine> listModel;
     private final String agencyName;
+    private AgencyMiddleGateway gateway;
 
     /**
      * Creates new form TravelApprovalFrame
@@ -30,6 +31,12 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
         initComponents();
         setTitle(agencyName);
         this.agencyName = agencyName;
+        gateway = new AgencyMiddleGateway(bankRequestQueue) {
+            @Override
+            public void onAgencyRequestArrived(AgencyRequest request) {
+                listModel.addElement(new BookingAgencyListLine(request, null));
+            }
+        };
     }
 
     /**
