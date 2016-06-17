@@ -53,8 +53,8 @@ public abstract class ClientMiddleGateway {
         try {
             sender = new MessageSender(Constants.clientMiddleDest);
             Message msg = sender.createTextMessage(serializer.requestToString(request));
-            sender.send(msg);
             msg.setJMSReplyTo(receiver.getDestination());
+            sender.send(msg);
             hm.put(msg.getJMSMessageID(), request);
         } catch (NamingException | JMSException ex) {
             Logger.getLogger(ClientMiddleGateway.class.getName()).log(Level.SEVERE, null, ex);

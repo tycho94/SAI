@@ -16,7 +16,6 @@ import javax.swing.DefaultListModel;
  */
 public class BookingAgencyFrame extends javax.swing.JFrame {
 
-
     private final DefaultListModel<BookingAgencyListLine> listModel;
     private final String agencyName;
     private AgencyMiddleGateway gateway;
@@ -111,7 +110,10 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
         if (jListLine != null) {
             jListLine.setReply(reply);
             jList1.repaint();
+
+            gateway.replyToAgencyRequest(jListLine.getRequest(), reply);
         }
+
     }//GEN-LAST:event_jbSendAgencyReplyActionPerformed
 
     /**
