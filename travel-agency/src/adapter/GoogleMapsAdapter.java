@@ -39,7 +39,7 @@ public class GoogleMapsAdapter {
             serializer = new AddressSerializer();
             sender = new MessageSender(Constants.googleMiddleDest);
             receiver = new MessageReceiver(Constants.middleGoogleDest);
-            //receiver.SetRedelivery();
+            receiver.SetRedelivery();
             receiver.setListener((Message msg) -> {
                 try {
                     TravelRequest request = serializer.addressesFromString(((TextMessage) msg).getText());

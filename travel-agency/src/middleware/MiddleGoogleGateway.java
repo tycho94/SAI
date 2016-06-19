@@ -36,7 +36,7 @@ public abstract class MiddleGoogleGateway {
             serializer = new AddressSerializer();
 
             receiver = new MessageReceiver(Constants.googleMiddleDest);
-            // receiver.SetRedelivery();
+            receiver.SetRedelivery();
             receiver.setListener((Message msg) -> {
                 try {
                     long distance = Long.valueOf(((TextMessage) msg).getText());
