@@ -6,6 +6,9 @@ import client.BookingClientFrame;
 import java.awt.EventQueue;
 import middleware.MiddlewareFrame;
 
+
+//Start every form and the maps adapter
+
 public class StartAllAgencies {
 
     public static void main(String[] args) {

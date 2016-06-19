@@ -11,20 +11,21 @@ import model.TravelRequest;
 /**
  *
  * @author tycho
+ * 
  */
-public class AddressSerializer {
+public class TravelRequestSerializer {
 
     Genson genson;
 
-    public AddressSerializer() {
+    public TravelRequestSerializer() {
         genson = new Genson();
     }
 
-    public String addressesToString(TravelRequest a) {
+    public String travelRequestToString(TravelRequest a) {
         return genson.serialize(a);
     }
 
-    public TravelRequest addressesFromString(String str) {
+    public TravelRequest travelRequestFromString(String str) {
         return genson.deserialize(str, TravelRequest.class);
     }
 

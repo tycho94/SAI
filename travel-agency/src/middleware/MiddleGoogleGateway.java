@@ -6,7 +6,7 @@
 package middleware;
 
 import booking.model.client.ClientBookingRequest;
-import gateway.AddressSerializer;
+import gateway.TravelRequestSerializer;
 import gateway.Constants;
 import gateway.MessageReceiver;
 import gateway.MessageSender;
@@ -22,18 +22,19 @@ import model.TravelRequest;
 /**
  *
  * @author tycho
+ * Gateway to the googleAdapter
  */
 public abstract class MiddleGoogleGateway {
 
     MessageSender sender;
     MessageReceiver receiver;
-    AddressSerializer serializer;
+    TravelRequestSerializer serializer;
     HashMap<String, ClientBookingRequest> hm = new HashMap<>();
 
     public MiddleGoogleGateway() {
         try {
             hm = new HashMap<>();
-            serializer = new AddressSerializer();
+            serializer = new TravelRequestSerializer();
 
             receiver = new MessageReceiver(Constants.googleMiddleDest);
             receiver.SetRedelivery();
@@ -51,11 +52,12 @@ public abstract class MiddleGoogleGateway {
         }
     }
 
+    //send the request to the adapter
     public void sendDistanceRequest(ClientBookingRequest request) {
         try {
             sender = new MessageSender(Constants.middleGoogleDest);
             Message m = sender.createTextMessage(
-                    serializer.addressesToString(new TravelRequest(request.getDestinationAirport(), request.getTransferToAddress())));
+                    serializer.travelRequestToString(new TravelRequest(request.getDestinationAirport(), request.getTransferToAddress())));
             sender.send(m);
             hm.put(m.getJMSMessageID(), request);
         } catch (NamingException | JMSException ex) {

@@ -28,9 +28,11 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
         initComponents();
         setTitle(agencyName);
         this.agencyName = agencyName;
+        //Create the gateway and override the method onAgencyRequestArrived
         gateway = new AgencyMiddleGateway(bankRequestQueue) {
             @Override
             public void onAgencyRequestArrived(AgencyRequest request) {
+                //add the element to the list when a request arrives
                 listModel.addElement(new BookingAgencyListLine(request, null));
             }
         };
@@ -108,7 +110,7 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
         if (jListLine != null) {
             jListLine.setReply(reply);
             jList1.repaint();
-
+            //send the reply over the gateway
             gateway.replyToAgencyRequest(jListLine.getRequest(), reply);
         }
 

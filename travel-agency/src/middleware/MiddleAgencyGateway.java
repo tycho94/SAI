@@ -24,6 +24,7 @@ import javax.naming.NamingException;
 /**
  *
  * @author tycho
+ * Gateway between the middleware and agency on the middleware's side
  */
 public abstract class MiddleAgencyGateway {
 
@@ -37,6 +38,7 @@ public abstract class MiddleAgencyGateway {
             hm = new HashMap<>();
             serializer = new AgencySerializer();
             senders = new ArrayList<>();
+            //add all the agencies to the sender list
             senders.add(new MessageSender(Constants.middleAgencyDest1));
             senders.add(new MessageSender(Constants.middleAgencyDest2));
             senders.add(new MessageSender(Constants.middleAgencyDest3));
@@ -54,7 +56,9 @@ public abstract class MiddleAgencyGateway {
         }
     }
 
+    //Forward the request to the agency
     public void sendAgencyRequest(int agency, AgencyRequest request) {
+        //integer to identify which agency to send to
         agency--;
         try {
             Message m = senders.get(agency).send(senders.get(agency).createTextMessage(serializer.requestToString(request)));

@@ -43,6 +43,8 @@ public class MiddlewareFrame extends javax.swing.JFrame {
         gatewayClient = new MiddleClientGateway() {
             @Override
             public void onBookingRequestArrived(ClientBookingRequest request) {
+                //if there is a transfer requested forward it to google
+                //if not forward it to the agencies
                 if (request.getTransferToAddress() != null) {
                     gatewayGoogle.sendDistanceRequest(request);
                 } else {
@@ -50,6 +52,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                             = new AgencyRequest(request.getDestinationAirport(),
                                     request.getOriginAirport(), -1);
 
+                    //use a counter and write the total send requests to a hashmap
                     int counter = 0;
                     if (Rule(Constants.cheap1, newRequest)) {
                         gatewayAgency.sendAgencyRequest(1, newRequest);
@@ -66,6 +69,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                     add(newRequest);
                     hmRequests.put(newRequest, request);
                     if (counter > 0) {
+                        //this aggregation hashmap is later used to check the number of replies
                         hmAggregator.put(newRequest, counter);
                     }
                 }
@@ -75,6 +79,8 @@ public class MiddlewareFrame extends javax.swing.JFrame {
         gatewayAgency = new MiddleAgencyGateway() {
             @Override
             public void onAgencyReplyArrived(AgencyRequest request, AgencyReply reply) {
+                //When an agency replies check if the current reply has a better offer
+                //if not set the new reply as the best offer                
                 if (hmAggregator.get(request) > 0) {
                     hmAggregator.put(request, (hmAggregator.get(request) - 1));
 
@@ -89,7 +95,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                         add(request, reply);
                     }
                 }
-
+                //If all agencies replied send the best offer to the client
                 if (hmAggregator.get(request) == 0) {
                     ClientBookingReply newReply = new ClientBookingReply(getCurrentReply(request).getNameAgency(), getCurrentReply(request).getTotalPrice());
 
@@ -101,6 +107,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
         gatewayGoogle = new MiddleGoogleGateway() {
             @Override
             public void onDistanceArrived(ClientBookingRequest request, long distance) {
+                //when the distance is retrieved from google forward it to the agencies
                 AgencyRequest newRequest
                         = new AgencyRequest(request.getDestinationAirport(),
                                 request.getOriginAirport(), distance / 1000);

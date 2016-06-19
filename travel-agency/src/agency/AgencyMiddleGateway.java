@@ -22,6 +22,9 @@ import javax.naming.NamingException;
 /**
  *
  * @author tycho
+ * Gateway between the middleware and agency on the agency's side
+ * 
+ * Follows the basic rules like every other gateway
  */
 public abstract class AgencyMiddleGateway {
 
@@ -51,8 +54,10 @@ public abstract class AgencyMiddleGateway {
 
     }
 
+    //send the reply to a request to the middleware
     public void replyToAgencyRequest(AgencyRequest request, AgencyReply reply) {
         try {
+            //Send a reply according back and set the correlation ID to the request using a hashmap            
             sender = new MessageSender(Constants.agencyMiddleDest);
             Message msg = sender.createTextMessage(serializer.replyToString(reply));
             msg.setJMSCorrelationID(hm.get(request));

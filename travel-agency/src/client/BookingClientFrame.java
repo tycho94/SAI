@@ -18,6 +18,7 @@ import model.ClientListLine;
  */
 public class BookingClientFrame extends javax.swing.JFrame {
 
+    //Client ID for multiple clients
     private final String Channel = "1";
     private final DefaultListModel<ClientListLine> listModel;
     private ClientMiddleGateway gateway;
@@ -33,6 +34,7 @@ public class BookingClientFrame extends javax.swing.JFrame {
         gateway = new ClientMiddleGateway(Channel) {
             @Override
             public void onBookingReplyArrived(ClientBookingRequest request, ClientBookingReply reply) {
+                //add reply to request in the client's list
                 getRequestReply(request).setReply(reply);
                 jList1.repaint();
             }
@@ -241,6 +243,7 @@ public class BookingClientFrame extends javax.swing.JFrame {
 
         ClientBookingRequest request = new ClientBookingRequest(fromAirport, toAirport, nrTravellers, transferAddress);
 
+        //send the request over the gateway
         gateway.sendBookingRequest(request);
 
         listModel.addElement(new ClientListLine(request, null));

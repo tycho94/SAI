@@ -5,7 +5,7 @@
  */
 package adapter;
 
-import gateway.AddressSerializer;
+import gateway.TravelRequestSerializer;
 import gateway.Constants;
 import gateway.MessageReceiver;
 import gateway.MessageSender;
@@ -32,17 +32,19 @@ public class GoogleMapsAdapter {
 
     MessageSender sender;
     MessageReceiver receiver;
-    AddressSerializer serializer;
+    TravelRequestSerializer serializer;
 
+    
+    //Adapter for the GoogleMapsAPI
     public GoogleMapsAdapter() {
         try {
-            serializer = new AddressSerializer();
+            serializer = new TravelRequestSerializer();
             sender = new MessageSender(Constants.googleMiddleDest);
             receiver = new MessageReceiver(Constants.middleGoogleDest);
             receiver.SetRedelivery();
             receiver.setListener((Message msg) -> {
                 try {
-                    TravelRequest request = serializer.addressesFromString(((TextMessage) msg).getText());
+                    TravelRequest request = serializer.travelRequestFromString(((TextMessage) msg).getText());
                     Message m = sender.createTextMessage(Long.toString(GetDistance(request)));
                     m.setJMSCorrelationID(msg.getJMSMessageID());
                     sender.send(m);
@@ -55,9 +57,11 @@ public class GoogleMapsAdapter {
         }
     }
 
+    //Request the distance from the API
     private long GetDistance(TravelRequest request) {
         Client client = ClientBuilder.newClient();
 
+        //construct uri
         String uri
                 = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="
                 + request.getFromAddress()
@@ -70,6 +74,7 @@ public class GoogleMapsAdapter {
 
         Response r = googleService.request().accept(MediaType.APPLICATION_JSON).get();
 
+        //Might need improvement
         Object d = r.readEntity(Object.class);
         ArrayList<HashMap> u = (ArrayList<HashMap>) ((HashMap) d).get("rows");
         ArrayList<HashMap> v = (ArrayList<HashMap>) u.get(0).get("elements");

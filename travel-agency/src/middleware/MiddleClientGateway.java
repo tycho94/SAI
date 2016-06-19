@@ -22,6 +22,7 @@ import javax.naming.NamingException;
 /**
  *
  * @author tycho
+ * Gateway between the middleware and the client on the middleware's side
  */
 public abstract class MiddleClientGateway {
 
@@ -50,8 +51,10 @@ public abstract class MiddleClientGateway {
         }
     }
 
+    //send a reply to the client
     public void sendBookingReply(ClientBookingRequest request, ClientBookingReply reply) {
         try {
+            //sender constructed without a destination to use the replyTo and correlationID
             sender = new MessageSender();
             Message msg = sender.createTextMessage(serializer.replyToString(reply));
             msg.setJMSCorrelationID(hm.get(request).getJMSMessageID());

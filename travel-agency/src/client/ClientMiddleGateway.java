@@ -22,12 +22,14 @@ import javax.naming.NamingException;
 /**
  *
  * @author tycho
+ * Gateway between client and middleware on the client's side
  */
 public abstract class ClientMiddleGateway {
 
     private MessageSender sender;
     private MessageReceiver receiver;
     private BookingSerializer serializer;
+    //Hashmap with CorrelationID & Request
     private HashMap<String, ClientBookingRequest> hm;
 
     public ClientMiddleGateway(String Channel) {
@@ -49,6 +51,7 @@ public abstract class ClientMiddleGateway {
         }
     }
 
+    //Send a request to the middleware
     public void sendBookingRequest(ClientBookingRequest request) {
         try {
             sender = new MessageSender(Constants.clientMiddleDest);
