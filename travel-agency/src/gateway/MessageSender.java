@@ -72,10 +72,10 @@ public class MessageSender {
         } catch (JMSException ex) {
             Logger.getLogger(MessageSender.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
         return m;
     }
-    
+
     //Send message to set destination
     public Message send(Message msg) throws JMSException {
         producer.send(msg);

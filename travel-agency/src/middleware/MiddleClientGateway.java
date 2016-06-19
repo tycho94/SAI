@@ -24,7 +24,7 @@ import javax.naming.NamingException;
  * @author tycho
  */
 public abstract class MiddleClientGateway {
-    
+
     private MessageSender sender;
     private MessageReceiver receiver;
     private BookingSerializer serializer;
@@ -32,12 +32,11 @@ public abstract class MiddleClientGateway {
 
     public MiddleClientGateway() {
         try {
-            sender = new MessageSender();
             hm = new HashMap<>();
             serializer = new BookingSerializer();
             receiver = new MessageReceiver(Constants.clientMiddleDest);
             receiver.setListener((Message msg) -> {
-                ClientBookingRequest request;                
+                ClientBookingRequest request;
                 try {
                     request = serializer.requestFromString(((TextMessage) msg).getText());
                     hm.put(request, msg);
@@ -50,16 +49,17 @@ public abstract class MiddleClientGateway {
             Logger.getLogger(MiddleClientGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void sendBookingReply(ClientBookingRequest request, ClientBookingReply reply){
+
+    public void sendBookingReply(ClientBookingRequest request, ClientBookingReply reply) {
         try {
+            sender = new MessageSender();
             Message msg = sender.createTextMessage(serializer.replyToString(reply));
             msg.setJMSCorrelationID(hm.get(request).getJMSMessageID());
             sender.send(msg, hm.get(request).getJMSReplyTo());
-        } catch (JMSException ex) {
+        } catch (NamingException | JMSException ex) {
             Logger.getLogger(MiddleClientGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public abstract void onBookingRequestArrived(ClientBookingRequest request);
 }

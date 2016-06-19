@@ -5,7 +5,6 @@
  */
 package middleware;
 
-import agency.AgencyMiddleGateway;
 import booking.model.agency.AgencyReply;
 import booking.model.agency.AgencyRequest;
 import booking.model.client.ClientBookingReply;
@@ -30,6 +29,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
     private final HashMap<AgencyRequest, Integer> hmAggregator;
     private final MiddleClientGateway gatewayClient;
     private final MiddleAgencyGateway gatewayAgency;
+    private final MiddleGoogleGateway gatewayGoogle;
 
     /**
      * Creates new form MiddlewareFrame
@@ -43,26 +43,31 @@ public class MiddlewareFrame extends javax.swing.JFrame {
         gatewayClient = new MiddleClientGateway() {
             @Override
             public void onBookingRequestArrived(ClientBookingRequest request) {
-                AgencyRequest newRequest
-                        = new AgencyRequest(request.getDestinationAirport(),
-                                request.getOriginAirport(), -1);
-                int counter = 0;
-                if (Rule(Constants.cheap1, newRequest)) {
-                    gatewayAgency.sendAgencyRequest(1, newRequest);
-                    counter++;
-                }
-                if (Rule(Constants.good2, newRequest)) {
-                    gatewayAgency.sendAgencyRequest(2, newRequest);
-                    counter++;
-                }
-                if (Rule(Constants.fast3, newRequest)) {
-                    gatewayAgency.sendAgencyRequest(3, newRequest);
-                    counter++;
-                }
-                add(newRequest);
-                hmRequests.put(newRequest, request);
-                if (counter > 0) {
-                    hmAggregator.put(newRequest, counter);
+                if (request.getTransferToAddress() != null) {
+                    gatewayGoogle.sendDistanceRequest(request);
+                } else {
+                    AgencyRequest newRequest
+                            = new AgencyRequest(request.getDestinationAirport(),
+                                    request.getOriginAirport(), -1);
+
+                    int counter = 0;
+                    if (Rule(Constants.cheap1, newRequest)) {
+                        gatewayAgency.sendAgencyRequest(1, newRequest);
+                        counter++;
+                    }
+                    if (Rule(Constants.good2, newRequest)) {
+                        gatewayAgency.sendAgencyRequest(2, newRequest);
+                        counter++;
+                    }
+                    if (Rule(Constants.fast3, newRequest)) {
+                        gatewayAgency.sendAgencyRequest(3, newRequest);
+                        counter++;
+                    }
+                    add(newRequest);
+                    hmRequests.put(newRequest, request);
+                    if (counter > 0) {
+                        hmAggregator.put(newRequest, counter);
+                    }
                 }
             }
         };
@@ -93,6 +98,32 @@ public class MiddlewareFrame extends javax.swing.JFrame {
             }
         };
 
+        gatewayGoogle = new MiddleGoogleGateway() {
+            @Override
+            public void onDistanceArrived(ClientBookingRequest request, long distance) {
+                AgencyRequest newRequest
+                        = new AgencyRequest(request.getDestinationAirport(),
+                                request.getOriginAirport(), distance / 1000);
+                int counter = 0;
+                if (Rule(Constants.cheap1, newRequest)) {
+                    gatewayAgency.sendAgencyRequest(1, newRequest);
+                    counter++;
+                }
+                if (Rule(Constants.good2, newRequest)) {
+                    gatewayAgency.sendAgencyRequest(2, newRequest);
+                    counter++;
+                }
+                if (Rule(Constants.fast3, newRequest)) {
+                    gatewayAgency.sendAgencyRequest(3, newRequest);
+                    counter++;
+                }
+                add(newRequest);
+                hmRequests.put(newRequest, request);
+                if (counter > 0) {
+                    hmAggregator.put(newRequest, counter);
+                }
+            }
+        };
     }
 
     /**
@@ -179,7 +210,6 @@ public class MiddlewareFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<BookingAgencyListLine> jList1;

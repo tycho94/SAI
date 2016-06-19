@@ -5,12 +5,12 @@
  */
 package client;
 
-import model.ClientListLine;
-import javax.swing.DefaultListModel;
 import booking.model.client.Address;
 import booking.model.client.ClientBookingReply;
 import booking.model.client.ClientBookingRequest;
+import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import model.ClientListLine;
 
 /**
  *
@@ -29,7 +29,7 @@ public class BookingClientFrame extends javax.swing.JFrame {
         this.listModel = new DefaultListModel<>();
         initComponents();
         setTransfer(this.jcbTransfer.isSelected());
-        
+
         gateway = new ClientMiddleGateway(Channel) {
             @Override
             public void onBookingReplyArrived(ClientBookingRequest request, ClientBookingReply reply) {
@@ -242,7 +242,7 @@ public class BookingClientFrame extends javax.swing.JFrame {
         ClientBookingRequest request = new ClientBookingRequest(fromAirport, toAirport, nrTravellers, transferAddress);
 
         gateway.sendBookingRequest(request);
-        
+
         listModel.addElement(new ClientListLine(request, null));
     }//GEN-LAST:event_jbSendActionPerformed
 
@@ -255,7 +255,6 @@ public class BookingClientFrame extends javax.swing.JFrame {
         JCheckBox cbTransfer = (JCheckBox) evt.getSource();
         setTransfer(cbTransfer.isSelected());
     }//GEN-LAST:event_jcbTransferActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

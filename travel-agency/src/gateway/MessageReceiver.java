@@ -45,11 +45,12 @@ public final class MessageReceiver {
         StopRedelivery();
         connection.start();
     }
-    
+
     //Set message Listener
     public void setListener(MessageListener ml) throws JMSException {
         consumer.setMessageListener(ml);
     }
+
     //Get destination to set ReplyTo
     public Destination getDestination() {
         return destination;
@@ -61,11 +62,12 @@ public final class MessageReceiver {
         policy.setInitialRedeliveryDelay(10000);
         policy.setRedeliveryDelay(3000);
         policy.setMaximumRedeliveries(3);
-    }    
+    }
+
     //This is Called in the constructor.
     public void StopRedelivery() throws JMSException {
         RedeliveryPolicy policy = ((ActiveMQConnection) connection).getRedeliveryPolicy();
-        policy.setMaximumRedeliveries(0);   
+        policy.setMaximumRedeliveries(0);
     }
 
 }

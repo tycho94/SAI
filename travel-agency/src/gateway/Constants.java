@@ -10,6 +10,7 @@ package gateway;
  * @author tycho
  */
 public class Constants {
+
     // communication between client/broker/bank
     public static final String clientMiddleDest = "ClientMiddleDest";
     public static final String middleClientDest = "MiddleClientDest";
@@ -19,12 +20,9 @@ public class Constants {
     public static final String middleAgencyDest3 = "MiddleAgencyDestFast";
     public static final String agencyMiddleDest = "AgencyMiddleDest";
     //channel adapter destinations
-    public static final String middleCreditDest = "MiddleCredit";
-    public static final String creditMiddleDest = "CreditMiddle";
-    public static final String middleAcceptDest = "MiddleAccepted";
-    public static final String middleRejectDest = "MiddleRejected";
-    
-    
+    public static final String middleGoogleDest = "MiddleGoogle";
+    public static final String googleMiddleDest = "GoogleMiddle";
+
     //rules
     public static final String cheap1 = "#{transfer} >= 10 && #{transfer} <= 50";
     public static final String good2 = "#{transfer} <= 40";

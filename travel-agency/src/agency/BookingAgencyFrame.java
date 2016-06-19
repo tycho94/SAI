@@ -5,10 +5,10 @@
  */
 package agency;
 
-import model.BookingAgencyListLine;
 import booking.model.agency.AgencyReply;
 import booking.model.agency.AgencyRequest;
 import javax.swing.DefaultListModel;
+import model.BookingAgencyListLine;
 
 /**
  *
@@ -23,7 +23,6 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
     /**
      * Creates new form TravelApprovalFrame
      */
-     
     public BookingAgencyFrame(String agencyName, String bankRequestQueue) {
         this.listModel = new DefaultListModel<>();
         initComponents();
@@ -149,7 +148,6 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
             }
         });
     }*/
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JList<BookingAgencyListLine> jList1;

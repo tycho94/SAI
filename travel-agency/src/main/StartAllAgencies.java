@@ -1,5 +1,6 @@
 package main;
 
+import adapter.GoogleMapsAdapter;
 import agency.BookingAgencyFrame;
 import client.BookingClientFrame;
 import java.awt.EventQueue;
@@ -8,6 +9,8 @@ import middleware.MiddlewareFrame;
 public class StartAllAgencies {
 
     public static void main(String[] args) {
+        GoogleMapsAdapter adapter = new GoogleMapsAdapter();
+
         EventQueue.invokeLater(() -> {
             try {
                 MiddlewareFrame frame = new MiddlewareFrame();
@@ -60,5 +63,7 @@ public class StartAllAgencies {
                 e.printStackTrace();
             }
         });
+
+        // GoogleMapsAdapter adapter = new GoogleMapsAdapter();
     }
 }

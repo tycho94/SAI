@@ -24,7 +24,7 @@ import javax.naming.NamingException;
  * @author tycho
  */
 public abstract class ClientMiddleGateway {
-    
+
     private MessageSender sender;
     private MessageReceiver receiver;
     private BookingSerializer serializer;
@@ -35,7 +35,7 @@ public abstract class ClientMiddleGateway {
             hm = new HashMap<>();
             serializer = new BookingSerializer();
             receiver = new MessageReceiver(Constants.middleClientDest + Channel);
-            receiver.setListener((Message msg) -> { 
+            receiver.setListener((Message msg) -> {
                 ClientBookingReply reply = null;
                 try {
                     reply = serializer.replyFromSTring(((TextMessage) msg).getText());
@@ -48,8 +48,8 @@ public abstract class ClientMiddleGateway {
             Logger.getLogger(ClientMiddleGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void sendBookingRequest(ClientBookingRequest request){
+
+    public void sendBookingRequest(ClientBookingRequest request) {
         try {
             sender = new MessageSender(Constants.clientMiddleDest);
             Message msg = sender.createTextMessage(serializer.requestToString(request));
@@ -60,5 +60,6 @@ public abstract class ClientMiddleGateway {
             Logger.getLogger(ClientMiddleGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-        public abstract void onBookingReplyArrived(ClientBookingRequest request, ClientBookingReply reply);
+
+    public abstract void onBookingReplyArrived(ClientBookingRequest request, ClientBookingReply reply);
 }

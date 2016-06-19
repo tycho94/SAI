@@ -1,8 +1,7 @@
-
 package model;
 
-import booking.model.client.ClientBookingRequest;
 import booking.model.client.ClientBookingReply;
+import booking.model.client.ClientBookingRequest;
 
 public class ClientListLine {
 
