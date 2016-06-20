@@ -40,8 +40,8 @@ public abstract class MiddleGoogleGateway {
             receiver.SetRedelivery();
             receiver.setListener((Message msg) -> {
                 try {
-                    long distance = Long.valueOf(((TextMessage) msg).getText());
-                    onDistanceArrived(hm.get(msg.getJMSCorrelationID()), distance);
+                    Long distance = Long.valueOf(((TextMessage) msg).getText());                    
+                    onDistanceArrived(hm.get(msg.getJMSCorrelationID()), distance.doubleValue());
                 } catch (JMSException ex) {
                     Logger.getLogger(MiddleGoogleGateway.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -65,5 +65,5 @@ public abstract class MiddleGoogleGateway {
         }
     }
 
-    public abstract void onDistanceArrived(ClientBookingRequest request, long distance);
+    public abstract void onDistanceArrived(ClientBookingRequest request, double distance);
 }

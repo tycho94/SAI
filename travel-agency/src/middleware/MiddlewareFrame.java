@@ -106,11 +106,11 @@ public class MiddlewareFrame extends javax.swing.JFrame {
 
         gatewayGoogle = new MiddleGoogleGateway() {
             @Override
-            public void onDistanceArrived(ClientBookingRequest request, long distance) {
+            public void onDistanceArrived(ClientBookingRequest request, double distance) {
                 //when the distance is retrieved from google forward it to the agencies
                 AgencyRequest newRequest
                         = new AgencyRequest(request.getDestinationAirport(),
-                                request.getOriginAirport(), distance / 1000);
+                                request.getOriginAirport(), distance/1000);
                 int counter = 0;
                 if (Rule(Constants.cheap1, newRequest)) {
                     gatewayAgency.sendAgencyRequest(1, newRequest);
