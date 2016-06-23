@@ -54,15 +54,15 @@ public class MiddlewareFrame extends javax.swing.JFrame {
 
                     //use a counter and write the total send requests to a hashmap
                     int counter = 0;
-                    if (Rule(Constants.cheap1, newRequest)) {
+                    if (RuleEvaluation(Constants.cheap1, newRequest)) {
                         gatewayAgency.sendAgencyRequest(1, newRequest);
                         counter++;
                     }
-                    if (Rule(Constants.good2, newRequest)) {
+                    if (RuleEvaluation(Constants.good2, newRequest)) {
                         gatewayAgency.sendAgencyRequest(2, newRequest);
                         counter++;
                     }
-                    if (Rule(Constants.fast3, newRequest)) {
+                    if (RuleEvaluation(Constants.fast3, newRequest)) {
                         gatewayAgency.sendAgencyRequest(3, newRequest);
                         counter++;
                     }
@@ -112,15 +112,15 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                         = new AgencyRequest(request.getDestinationAirport(),
                                 request.getOriginAirport(), distance/1000);
                 int counter = 0;
-                if (Rule(Constants.cheap1, newRequest)) {
+                if (RuleEvaluation(Constants.cheap1, newRequest)) {
                     gatewayAgency.sendAgencyRequest(1, newRequest);
                     counter++;
                 }
-                if (Rule(Constants.good2, newRequest)) {
+                if (RuleEvaluation(Constants.good2, newRequest)) {
                     gatewayAgency.sendAgencyRequest(2, newRequest);
                     counter++;
                 }
-                if (Rule(Constants.fast3, newRequest)) {
+                if (RuleEvaluation(Constants.fast3, newRequest)) {
                     gatewayAgency.sendAgencyRequest(3, newRequest);
                     counter++;
                 }
@@ -138,7 +138,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
      * @param request The request in question
      * @return if the request is OK according to the rule true else false
      */
-    public boolean Rule(String rule, AgencyRequest request) {
+    public boolean RuleEvaluation(String rule, AgencyRequest request) {
         String resultString;
         boolean result = false;
         Evaluator evaluator = new Evaluator();

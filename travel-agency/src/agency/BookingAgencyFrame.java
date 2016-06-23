@@ -18,10 +18,13 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
 
     private final DefaultListModel<BookingAgencyListLine> listModel;
     private final String agencyName;
-    private AgencyMiddleGateway gateway;
+    private final AgencyMiddleGateway gateway;
 
     /**
      * Creates new form TravelApprovalFrame
+     *
+     * @param agencyName Name of the agency
+     * @param bankRequestQueue Destination string
      */
     public BookingAgencyFrame(String agencyName, String bankRequestQueue) {
         this.listModel = new DefaultListModel<>();
@@ -102,18 +105,21 @@ public class BookingAgencyFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Action preformed on button click
     private void jbSendAgencyReplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSendAgencyReplyActionPerformed
-        BookingAgencyListLine jListLine = jList1.getSelectedValue();
-        double price = Double.parseDouble(this.jtfTotalPrice.getText());
-
-        AgencyReply reply = new AgencyReply(this.agencyName, price);
-        if (jListLine != null) {
+        //Check if there is something selected and a price filled in
+        if (jList1.getSelectedValue() != null && !"".equals(jtfTotalPrice.getText())) {
+            //Get selected jList and price
+            BookingAgencyListLine jListLine = jList1.getSelectedValue();
+            double price = Double.parseDouble(this.jtfTotalPrice.getText());
+            //create and add reply
+            AgencyReply reply = new AgencyReply(this.agencyName, price);
             jListLine.setReply(reply);
             jList1.repaint();
             //send the reply over the gateway
             gateway.replyToAgencyRequest(jListLine.getRequest(), reply);
-        }
 
+        }
     }//GEN-LAST:event_jbSendAgencyReplyActionPerformed
 
     /**
