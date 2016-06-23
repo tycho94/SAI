@@ -48,30 +48,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                 if (request.getTransferToAddress() != null) {
                     gatewayGoogle.sendDistanceRequest(request);
                 } else {
-                    AgencyRequest newRequest
-                            = new AgencyRequest(request.getDestinationAirport(),
-                                    request.getOriginAirport(), -1);
-
-                    //use a counter and write the total send requests to a hashmap
-                    int counter = 0;
-                    if (RuleEvaluation(Constants.cheap1, newRequest)) {
-                        gatewayAgency.sendAgencyRequest(1, newRequest);
-                        counter++;
-                    }
-                    if (RuleEvaluation(Constants.good2, newRequest)) {
-                        gatewayAgency.sendAgencyRequest(2, newRequest);
-                        counter++;
-                    }
-                    if (RuleEvaluation(Constants.fast3, newRequest)) {
-                        gatewayAgency.sendAgencyRequest(3, newRequest);
-                        counter++;
-                    }
-                    add(newRequest);
-                    hmRequests.put(newRequest, request);
-                    if (counter > 0) {
-                        //this aggregation hashmap is later used to check the number of replies
-                        hmAggregator.put(newRequest, counter);
-                    }
+                    SendToAgencies(request, (double) -1);
                 }
             }
         };
@@ -83,7 +60,7 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                 //if not set the new reply as the best offer                
                 if (hmAggregator.get(request) > 0) {
                     hmAggregator.put(request, (hmAggregator.get(request) - 1));
-
+                    
                     if (getCurrentReply(request) != null) {
                         if (getCurrentReply(request).getTotalPrice() == -1 && reply.getTotalPrice() > 0) {
                             add(request, reply);
@@ -97,8 +74,10 @@ public class MiddlewareFrame extends javax.swing.JFrame {
                 }
                 //If all agencies replied send the best offer to the client
                 if (hmAggregator.get(request) == 0) {
-                    ClientBookingReply newReply = new ClientBookingReply(getCurrentReply(request).getNameAgency(), getCurrentReply(request).getTotalPrice());
-
+                    ClientBookingReply newReply = new ClientBookingReply(
+                            getCurrentReply(request).getNameAgency(), 
+                            getCurrentReply(request).getTotalPrice()* (hmRequests.get(request).getNumberOfTravellers()));
+                    
                     gatewayClient.sendBookingReply(hmRequests.get(request), newReply);
                 }
             }
@@ -108,29 +87,36 @@ public class MiddlewareFrame extends javax.swing.JFrame {
             @Override
             public void onDistanceArrived(ClientBookingRequest request, double distance) {
                 //when the distance is retrieved from google forward it to the agencies
-                AgencyRequest newRequest
-                        = new AgencyRequest(request.getDestinationAirport(),
-                                request.getOriginAirport(), distance/1000);
-                int counter = 0;
-                if (RuleEvaluation(Constants.cheap1, newRequest)) {
-                    gatewayAgency.sendAgencyRequest(1, newRequest);
-                    counter++;
-                }
-                if (RuleEvaluation(Constants.good2, newRequest)) {
-                    gatewayAgency.sendAgencyRequest(2, newRequest);
-                    counter++;
-                }
-                if (RuleEvaluation(Constants.fast3, newRequest)) {
-                    gatewayAgency.sendAgencyRequest(3, newRequest);
-                    counter++;
-                }
-                add(newRequest);
-                hmRequests.put(newRequest, request);
-                if (counter > 0) {
-                    hmAggregator.put(newRequest, counter);
-                }
+                SendToAgencies(request, distance/1000);
             }
         };
+    }
+
+    public void SendToAgencies(ClientBookingRequest request, Double distance) {
+        AgencyRequest newRequest
+                = new AgencyRequest(request.getDestinationAirport(),
+                        request.getOriginAirport(), distance);
+        //use a counter and write the total send requests to a hashmap
+        int counter = 0;
+        if (RuleEvaluation(Constants.cheap1, newRequest)) {
+            gatewayAgency.sendAgencyRequest(1, newRequest);
+            counter++;
+        }
+        if (RuleEvaluation(Constants.good2, newRequest)) {
+            gatewayAgency.sendAgencyRequest(2, newRequest);
+            counter++;
+        }
+        if (RuleEvaluation(Constants.fast3, newRequest)) {
+            gatewayAgency.sendAgencyRequest(3, newRequest);
+            counter++;
+        }
+        add(newRequest);
+        //add to request hashmap for later retrieval to send back to clients
+        hmRequests.put(newRequest, request);
+        if (counter > 0) {
+            //this aggregation hashmap is later used to check the number of replies
+            hmAggregator.put(newRequest, counter);
+        }
     }
 
     /**
